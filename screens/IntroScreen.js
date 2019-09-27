@@ -20,7 +20,6 @@ const styleSheet = {
     },
 };
 
-
 const IntroScreen = props => {
 
     const name = useSelector(state => state.app.name);
