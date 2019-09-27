@@ -9,6 +9,7 @@ const AuthLoadingScreen = props => {
         props.navigation.navigate(userToken ? "App" : "Auth");
     };
 
+
     useEffect(() => {
         _bootstrapAsync();
     }, []);

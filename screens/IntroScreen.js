@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import PropTypes from "prop-types";
-import {connect} from "react-redux";
+import {connect, useSelector, useDispatch} from "react-redux";
 import {View, Text, Dimensions, AsyncStorage} from "react-native";
 
 const {width} = Dimensions.get("window");
@@ -20,11 +20,17 @@ const styleSheet = {
     },
 };
 
+
 const IntroScreen = props => {
+
+    const name = useSelector(state => state.app.name);
+    const disAllReducers = useDispatch();
+
+
     useEffect(() => {
         async function getName() {
             const temp = await AsyncStorage.getItem("name");
-            setName(temp);
+            disAllReducers.app.setName(temp);
         }
 
         getName();
@@ -36,8 +42,8 @@ const IntroScreen = props => {
         }, 5000);
     }, []);
 
-    const [name, setName] = useState("");
-
+    // const [name, setName] = useState("");
+    console.log(this.props);
     return (
         <View style={styleSheet.container}>
             <Text style={styleSheet.nameStyle}>{name}</Text>
@@ -51,4 +57,5 @@ IntroScreen.propTypes = {
     }).isRequired,
 };
 
-export default IntroScreen;
+
+export default (IntroScreen);

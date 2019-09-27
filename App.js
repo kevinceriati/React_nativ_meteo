@@ -9,6 +9,10 @@ const store = init({
     models: {app},
 });
 
+
+/*console.log(JSON.stringify(store.getState()));*/
+
+
 export default function App() {
     return (
         <Provider store={store}>
@@ -25,3 +29,4 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
 });
+

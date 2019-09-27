@@ -1,8 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {View, Text, Dimensions} from "react-native";
+import {View, Text, Dimensions, ImageBackground} from "react-native";
+import {useSelector} from "react-redux";
 
 const { width } = Dimensions.get("window");
+const mainBackground = require("../assets/images/bg.jpg");
 
 const styleSheet = {
     container: {
@@ -19,11 +21,17 @@ const styleSheet = {
     },
 };
 
-const HomeScreen = props => (
+const HomeScreen = props => {
+    const name = useSelector(state => state.app.name);
+ return(
+
+<ImageBackground source={mainBackground} style={{flex:1}}>
     <View style={styleSheet.container}>
-        <Text style={styleSheet.textStyle}> Hello !</Text>
+        <Text style={styleSheet.textStyle}>Hello {name}</Text>
     </View>
+</ImageBackground>
 );
+};
 
 HomeScreen.propTypes = {};
 

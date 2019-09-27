@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import PropTypes from "prop-types";
-import {connect} from "react-redux";
+import {connect, useDispatch} from "react-redux";
 import {View, Text, TextInput, Button, Dimensions, AsyncStorage} from "react-native";
 
 const {width} = Dimensions.get("window");
@@ -31,12 +31,16 @@ const IntroFormScreen = props => {
         if (name !== "") {
             await AsyncStorage.setItem("name", name);
             navigation.navigate("Welcome");
+
+            // On store le name dans le state avec dispatch
+            dispatch.app.setName(name);
         }
     }
 
+    const dispatch = useDispatch();
 
     const [name, setName] = useState('');
-    const {dispatch, navigation} = props;
+    const { navigation} = props;
 
     return (
         <View style={styleSheet.container}>
@@ -62,3 +66,15 @@ IntroFormScreen.propTypes = {
 };
 
 export default connect()(IntroFormScreen);
+
+/*console.log(JSON.stringify(store.getState()));*/
+
+const mapStateToProps = state => ({
+    name: state.name,
+});
+
+const mapDispatchToProps = state => ({
+    loadUsers: state.name.loadName,
+});
+
+const nameListContainer = connect(mapStateToProps, mapDispatchToProps)(IntroFormScreen)

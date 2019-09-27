@@ -1,12 +1,16 @@
 export const app = {
     state: {
-        name:'Pouet',
+        name:'',
     },
     reducers: {
         setName(state, name){
          return {...state, name};
         },
     },
-    effects:{},
-};
-
+    effects: dispatch => ({
+        async loadName(payload, rootState) {
+            const name = await Api.getName();
+            dispatch.setName(name);
+        }
+    })
+}
