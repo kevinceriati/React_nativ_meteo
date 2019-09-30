@@ -1,10 +1,13 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import PropTypes from "prop-types";
 import {View, Text, Dimensions, ImageBackground, Image, AsyncStorage} from "react-native";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch, useSelector, connect} from "react-redux";
+import * as location from "expo-location";
+import * as Permissions from "expo-permissions";
+
 /*import Image from "react-native-web/src/exports/Image";*/
 
-const { width } = Dimensions.get("window");
+const {width} = Dimensions.get("window");
 const mainBackground = require("../assets/images/mountains.png");
 const badge = require("../assets/images/badge.png");
 
@@ -20,37 +23,87 @@ const styleSheet = {
         fontSize: 20,
         fontWeight: "bold",
     },
+    errorStyle: {
+        color: "red",
+        fontSize: 25,
+        fontWeight: "bold",
+    },
 };
 
+async function getName() {
+    const temp = await AsyncStorage.getItem("name");
+    disAllReducers.app.setName(temp);
+    console.log(temp)
+}
 
 
 const HomeScreen = props => {
     const name = useSelector(state => state.app.name);
     const disAllReducers = useDispatch();
 
+    async function getName() {
+        const temp = await AsyncStorage.getItem("name");
+        disAllReducers.app.setName(temp);
+        console.log(temp)
+    }
 
-    React.useEffect(() => {
-        async function getName() {
-            const temp = await AsyncStorage.getItem("name");
-            disAllReducers.app.setName(temp);
-        }
 
-        getName();
+    useEffect(() => {
+        getName()
+        dispatch({type: 'app/getMeteoInformations'});
     }, []);
 
- return(
+    useEffect(() => {
+        if (informations.main) {
+            setNameCity(informations.name);
+            setTemp(informations.main.temp);
+        }
+        console.log(informations)
+    });
 
-<ImageBackground source={mainBackground} style={{flex:1, justifyContent: "center", alignItems: "center"}}>
-    <ImageBackground source={badge} style={{position:"absolute", width: 150, height: 150, justifyContent: "center", top: 150}}>
-    {/*<View style={styleSheet.container}>*/}
-        <Text style={[styleSheet.textStyle, {color: "#209981", alignSelf: "center", textAlign: "center",paddingTop: 5, paddingRight: 50}]}>Hi</Text>
-        <Text style={[styleSheet.textStyle, {color: "#38BBF0", paddingBottom: 5, textAlign: "center"}]}>{name}</Text>
-    {/*</View>*/}
-    </ImageBackground>
-</ImageBackground>
-);
+    const {dispatch, app: {informations}} = props;
+    const [nameCity, setNameCity] = useState('');
+    const [temp, setTemp] = useState('');
+
+
+    return (
+
+        <ImageBackground source={mainBackground} style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+            <ImageBackground source={badge}
+                             style={{
+                                 position: "absolute",
+                                 width: 150,
+                                 height: 150,
+                                 justifyContent: "center",
+                                 top: 150
+                             }}>
+                <Text style={[styleSheet.textStyle, {
+                    color: "#209981",
+                    alignSelf: "center",
+                    textAlign: "center",
+                    paddingTop: 5,
+                    paddingRight: 50
+                }]}>Hi</Text>
+                <Text
+                    style={[styleSheet.textStyle, {
+                        color: "#38BBF0",
+                        paddingBottom: 5,
+                        textAlign: "center"
+                    }]}>{name}</Text>
+            </ImageBackground>
+            <View style={styleSheet.container}>
+                <Text style={styleSheet.textStyle}>{`Ville: ${nameCity}`}</Text>
+                <Text style={styleSheet.textStyle}>{`Temperature: ${temp}°C`}</Text>
+            </View>
+        </ImageBackground>
+    );
+}
+
+HomeScreen.propTypes = {
+    dispatch: PropTypes.func.isRequired,
+    app: PropTypes.shape({
+        informations: PropTypes.object,
+    }).isRequired,
 };
 
-HomeScreen.propTypes = {};
-
-export default HomeScreen;
+export default connect(({app}) => ({app}))(HomeScreen);
