@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import PropTypes from "prop-types";
 import {View, Text, Dimensions, ImageBackground, Image, AsyncStorage} from "react-native";
 import {useDispatch, useSelector, connect} from "react-redux";
-import * as location from "expo-location";
+import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 
 /*import Image from "react-native-web/src/exports/Image";*/
@@ -48,10 +48,26 @@ const HomeScreen = props => {
     }
 
 
+
+////////////////// Localisation ///////////////////////////////////////////////////////////////////////////
+    async function _getLocationAsync() {
+        let { status } = await Permissions.askAsync(Permissions.LOCATION);
+        if (status !== "granted") {
+            setError("Permission to access ocation was denied");
+        }
+        let location = await Location.getCurrentPositionAsync({});
+        dispatch({type: "app/getMeteoInformations", payload: location});
+    };
+    useEffect(() => {
+        _getLocationAsync();
+    }, []);
+
     useEffect(() => {
         getName()
         dispatch({type: 'app/getMeteoInformations'});
     }, []);
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     useEffect(() => {
         if (informations.main) {
@@ -64,6 +80,7 @@ const HomeScreen = props => {
     const {dispatch, app: {informations}} = props;
     const [nameCity, setNameCity] = useState('');
     const [temp, setTemp] = useState('');
+    const [error, setError] = useState('');
 
 
     return (
@@ -94,10 +111,11 @@ const HomeScreen = props => {
             <View style={styleSheet.container}>
                 <Text style={styleSheet.textStyle}>{`Ville: ${nameCity}`}</Text>
                 <Text style={styleSheet.textStyle}>{`Temperature: ${temp}°C`}</Text>
+                {error !== "" && <Text style={styleSheet.errorStyle}>{error}</Text>}
             </View>
         </ImageBackground>
     );
-}
+};
 
 HomeScreen.propTypes = {
     dispatch: PropTypes.func.isRequired,
