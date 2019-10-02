@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Component } from "react";
 import PropTypes from "prop-types";
-import { View, Text, Dimensions, ImageBackground, Image, AsyncStorage, FlatList } from "react-native";
+import { View, Text, Dimensions, ImageBackground, Image, AsyncStorage, FlatList, StyleSheet } from "react-native";
 import {useDispatch, useSelector, connect} from "react-redux";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
@@ -10,6 +10,7 @@ import * as Permissions from "expo-permissions";
 const {width} = Dimensions.get("window");
 const mainBackground = require("../assets/images/mountains.png");
 const badge = require("../assets/images/badge.png");
+
 
 const styleSheet = {
     container: {
@@ -30,14 +31,33 @@ const styleSheet = {
     },
 };
 
-async function getName() {
-    const temp = await AsyncStorage.getItem("name");
-    disAllReducers.app.setName(temp);
-    console.log(temp)
-}
-
 
 const HomeScreen = props => {
+
+    const DATA = [
+        {
+            id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+            title: 'First Item',
+        },
+        {
+            id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
+            title: 'Second Item',
+        },
+        {
+            id: '58694a0f-3da1-471f-bd96-145571e29d72',
+            title: 'Third Item',
+        },
+    ];
+
+    function Item({ title }) {
+        return (
+            <View style={styles.item}>
+                <Text style={styles.title}>{title}</Text>
+            </View>
+        );
+    }
+
+
     const name = useSelector(state => state.app.name);
     const disAllReducers = useDispatch();
 
@@ -113,6 +133,11 @@ const HomeScreen = props => {
                 <Text style={styleSheet.textStyle}>{`Temperature: ${temp}°C`}</Text>
                 {error !== "" && <Text style={styleSheet.errorStyle}>{error}</Text>}
             </View>
+            <FlatList
+                data={DATA}
+                renderItem={({ item }) => <Item title={item.title} />}
+                keyExtractor={item => item.id}
+            />
         </ImageBackground>
     );
 };
@@ -123,5 +148,18 @@ HomeScreen.propTypes = {
         informations: PropTypes.object,
     }).isRequired,
 };
+
+const styles = StyleSheet.create({
+
+    item: {
+        backgroundColor: '#f9c2ff',
+        padding: 20,
+        marginVertical: 8,
+        marginHorizontal: 16,
+    },
+    title: {
+        fontSize: 32,
+    },
+});
 
 export default connect(({app}) => ({app}))(HomeScreen);
