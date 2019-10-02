@@ -38,9 +38,8 @@ const IntroFormScreen = props => {
     }
 
     const dispatch = useDispatch();
-
     const [name, setName] = useState('');
-    const { navigation} = props;
+    const { navigation } = props;
 
     return (
         <View style={styleSheet.container}>
@@ -65,10 +64,6 @@ IntroFormScreen.propTypes = {
     }).isRequired,
 };
 
-export default connect()(IntroFormScreen);
-
-/*console.log(JSON.stringify(store.getState()));*/
-
 const mapStateToProps = state => ({
     name: state.name,
 });
@@ -77,4 +72,8 @@ const mapDispatchToProps = state => ({
     loadUsers: state.name.loadName,
 });
 
-const nameListContainer = connect(mapStateToProps, mapDispatchToProps)(IntroFormScreen)
+export default connect(mapDispatchToProps, mapStateToProps)(IntroFormScreen);
+
+
+/*
+const nameListContainer = connect(, )(IntroFormScreen)*/

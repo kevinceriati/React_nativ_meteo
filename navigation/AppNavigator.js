@@ -7,6 +7,7 @@ import AuthLoadingScreen from "../screens/AuthLoadingScreen";
 import IntroScreen from "../screens/IntroScreen";
 import IntroFormScreen from "../screens/IntroFormScreen";
 import Icon from "react-native-vector-icons/FontAwesome";
+import AddCityScreen from "../screens/AddCityScreen";
 
 const AppStack = createBottomTabNavigator({
     Home: {
@@ -21,6 +22,14 @@ const AppStack = createBottomTabNavigator({
         navigationOptions: {
             tabBarLabel: "Welcome",
             tabBarIcon: ({tintColor}) => <Icon name="users" size={25} color="#38BBF0" />
+        }
+    },
+
+    AddCity: {
+        screen: AddCityScreen,
+        navigationOptions: {
+            tabBarLabel: "AddCity",
+            tabBarIcon: ({tintColor}) => <Icon name="plus" size={25} color="#38BBF0" />
         }
     }
 });

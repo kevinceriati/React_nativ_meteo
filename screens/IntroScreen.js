@@ -41,8 +41,7 @@ const IntroScreen = props => {
         }, 5000);
     }, []);
 
-    // const [name, setName] = useState("");
-    console.log(this.props);
+
     return (
         <View style={styleSheet.container}>
             <Text style={styleSheet.nameStyle}>{name}</Text>

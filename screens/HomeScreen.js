@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState, Component } from "react";
 import PropTypes from "prop-types";
-import {View, Text, Dimensions, ImageBackground, Image, AsyncStorage} from "react-native";
+import { View, Text, Dimensions, ImageBackground, Image, AsyncStorage, FlatList } from "react-native";
 import {useDispatch, useSelector, connect} from "react-redux";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
@@ -55,7 +55,7 @@ const HomeScreen = props => {
         if (status !== "granted") {
             setError("Permission to access ocation was denied");
         }
-        let location = await Location.getCurrentPositionAsync({});
+        let location = await  Location.getCurrentPositionAsync({});
         dispatch({type: "app/getMeteoInformations", payload: location});
     };
     useEffect(() => {
