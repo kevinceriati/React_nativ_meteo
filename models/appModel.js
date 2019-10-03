@@ -4,6 +4,7 @@ export const app = {
     state: {
         name: '',
         nameCity: [],
+        addCityData: [],
         informations: {},
     },
     reducers: {
@@ -11,7 +12,12 @@ export const app = {
             return {...state, name};
         },
         setNameCity(state, nameCity) {
+
             return {...state, nameCity};
+        },
+        setAddCityData(state, addCityData) {
+// ici push city into array
+            return {...state, addCityData};
         },
         setInformations(state, informations) {
 
@@ -34,6 +40,7 @@ export const app = {
                 const response = await requestGet('weather', `lat=${lat}&lon=${lon}`);
                 if (response) {
                     this.setInformations(response);
+
                 }
             }
         },
@@ -41,11 +48,17 @@ export const app = {
         /*
          * Function used to get meteo from hard city enter in addCityScreen input
          */
-        async getMeteoInformationsCity(nameCity) {
-            const response = await requestGet('weather', `q=${nameCity}`);
+        async getMeteoInformationsCity(ville) {
+            const response = await requestGet('weather', `q=${ville}`);
             if (response) {
-                this.setInformations(response);
+                this.setNameCity(ville);
+                console.log(ville);
+                // ou alors ici push city into array
             }
-        }
+  /*          return {
+                ...state,
+                addCityData: [...state.addCityData, action.new]
+            }*/
+        },
     })
 };
